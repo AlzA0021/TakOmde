@@ -2,23 +2,12 @@ import type { AppProps } from 'next/app';
 import { Toaster } from 'react-hot-toast';
 import Layout from '@/components/Layout/Layout';
 import '@/styles/globals.css';
-import localFont from 'next/font/local';
+import { Vazirmatn } from 'next/font/google'
 
-const vazir = localFont({
-  src: [
-    {
-      path: '../fonts/Vazir-Regular.woff2',
-      weight: '400',
-      style: 'normal',
-    },
-    {
-      path: '../fonts/Vazir-Bold.woff2',
-      weight: '700',
-      style: 'normal',
-    },
-  ],
-  variable: '--font-vazir',
-});
+const vazir = Vazirmatn({
+  subsets: ['arabic'],
+  weight: ['400', '700'],
+})
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
