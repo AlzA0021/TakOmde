@@ -19,7 +19,7 @@ class ExcelImportService:
     COLUMN_MAPPING = {
         "کد کالا": "sku",
         "نام کالا": "name",
-        "موجودی": "stock_quantity",
+        "همه انبارها": "stock_quantity",
         "قیمت": "price",
         "قیمت فروش": "sale_price",
         "آخرین خرید": "last_purchase_price",
