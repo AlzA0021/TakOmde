@@ -148,7 +148,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           {mounted && (
             <button
               onClick={addToCart}
-              disabled={isAddingToCart || !product.in_stock}
+              disabled={isAddingToCart || !product.is_in_stock}
               className="p-2 bg-primary text-white rounded-lg hover:bg-primary-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               aria-label="افزودن به سبد خرید"
             >
@@ -161,7 +161,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           )}
         </div>
 
-        {!product.in_stock && (
+        {!product.is_in_stock && (
           <p className="text-sm text-accent mt-2">ناموجود</p>
         )}
       </div>
