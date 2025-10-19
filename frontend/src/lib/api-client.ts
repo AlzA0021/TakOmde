@@ -91,19 +91,12 @@ export const api = {
   // Products
   products: {
     getAll: (params?: any) => client.get('/products/products/', { params }),
-    getOne: (slug: string) => client.get(`/products/products/${slug}/`),
+    getBySlug: (slug: string) => client.get(`/products/products/${slug}/`),
     getFeatured: () => client.get('/products/products/featured/'),
     getOnSale: () => client.get('/products/products/on_sale/'),
-    getRelated: (slug: string) => client.get(`/products/products/${slug}/related/`),
-    addReview: (slug: string, data: any) =>
-      client.post(`/products/products/${slug}/review/`, data),
-  },
-
-  // Categories
-  categories: {
-    getAll: () => client.get('/products/categories/'),
-    getOne: (slug: string) => client.get(`/products/categories/${slug}/`),
-    getProducts: (slug: string) => client.get(`/products/categories/${slug}/products/`),
+    getCategories: () => client.get('/products/categories/'),
+    getCategoryBySlug: (slug: string) => client.get(`/products/categories/${slug}/`),
+    search: (query: string) => client.get('/products/products/', { params: { search: query } }),
   },
 
   // Cart
@@ -118,35 +111,24 @@ export const api = {
     clear: () => client.post('/orders/cart/clear/'),
   },
 
-  // Wishlist
-  wishlist: {
-    get: () => client.get('/orders/wishlist/'),
-    addProduct: (data: { product_id: number }) =>
-      client.post('/orders/wishlist/add_product/', data),
-    removeProduct: (data: { product_id: number }) =>
-      client.post('/orders/wishlist/remove_product/', data),
-  },
-
   // Orders
   orders: {
     getAll: () => client.get('/orders/orders/'),
-    getOne: (id: number) => client.get(`/orders/orders/${id}/`),
+    getById: (id: number) => client.get(`/orders/orders/${id}/`),
     create: (data: any) => client.post('/orders/orders/', data),
-    cancel: (id: number) => client.post(`/orders/orders/${id}/cancel/`),
-  },
-
-  // Addresses
-  addresses: {
-    getAll: () => client.get('/auth/addresses/'),
-    create: (data: any) => client.post('/auth/addresses/', data),
-    update: (id: number, data: any) => client.put(`/auth/addresses/${id}/`, data),
-    delete: (id: number) => client.delete(`/auth/addresses/${id}/`),
-    setDefault: (id: number) => client.post(`/auth/addresses/${id}/set_default/`),
   },
 
   // Payments
   payments: {
-    request: (data: { order_id: number; gateway: string }) =>
+    request: (data: { order_id: number; payment_method: string }) =>
       client.post('/payments/request/', data),
+    verify: (params: any) => client.get('/payments/verify/', { params }),
+  },
+
+  // Wishlist
+  wishlist: {
+    get: () => client.get('/orders/wishlist/'),
+    add: (productId: number) => client.post('/orders/wishlist/add/', { product_id: productId }),
+    remove: (productId: number) => client.post('/orders/wishlist/remove/', { product_id: productId }),
   },
 };

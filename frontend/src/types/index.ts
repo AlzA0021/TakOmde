@@ -70,6 +70,8 @@ export interface Review {
   comment: string;
   is_approved: boolean;
   created_at: string;
+  product_count?: number;
+  parent?: number;
 }
 
 // Category Types
