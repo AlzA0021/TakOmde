@@ -15,20 +15,42 @@ export default function CategoriesPage() {
   const fetchCategories = async () => {
     try {
       const response = await api.products.getCategories();
-      setCategories(response.data);
+      
+      // مطمئن شوید response.data آرایه است
+      let allCategories = [];
+      if (Array.isArray(response.data)) {
+        allCategories = response.data;
+      } else if (response.data && Array.isArray(response.data.results)) {
+        allCategories = response.data.results;
+      } else if (response.data) {
+        allCategories = response.data;
+      }
+      
+      setCategories(allCategories);
     } catch (error) {
       console.error('Error fetching categories:', error);
+      setCategories([]);
     } finally {
       setLoading(false);
     }
   };
 
-  // گروه‌بندی دسته‌بندی‌ها بر اساس parent - اصلاح شده
-  const parentCategories = categories?.filter(cat => !cat.parent) || [];
-  const childCategories = categories?.filter(cat => cat.parent) || [];
+  // فیلتر کردن برای parent categories فقط
+  const parentCategories = (categories || []).filter(cat => !cat.parent) || [];
 
-  const getChildrenForParent = (parentId: number) => {
-    return childCategories.filter(cat => cat.parent === parentId);
+  // بهبود: ایجاد map برای دسترسی سریع
+  const childCategoriesByParent = new Map();
+  (categories || []).forEach(cat => {
+    if (cat.parent) {
+      if (!childCategoriesByParent.has(cat.parent)) {
+        childCategoriesByParent.set(cat.parent, []);
+      }
+      childCategoriesByParent.get(cat.parent).push(cat);
+    }
+  });
+
+  const getChildrenForParent = (parentId) => {
+    return childCategoriesByParent.get(parentId) || [];
   };
 
   return (

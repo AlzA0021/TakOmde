@@ -19,10 +19,10 @@ from .serializers import (
 
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     """ViewSet for categories"""
-    queryset = Category.objects.filter(is_active=True, parent=None)
+    queryset = Category.objects.filter(is_active=True).order_by("parent", "name")
     serializer_class = CategorySerializer
     lookup_field = 'slug'
-    
+
     @action(detail=True, methods=['get'])
     def products(self, request, slug=None):
         """Get products in a category"""
@@ -31,7 +31,7 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
             category=category,
             is_active=True
         )
-        
+
         serializer = ProductListSerializer(
             products,
             many=True,

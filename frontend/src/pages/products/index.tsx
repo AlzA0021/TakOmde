@@ -42,8 +42,23 @@ export default function ProductsPage() {
     setCategoriesLoading(true);
     try {
       const response = await api.products.getCategories();
-      console.log('Categories loaded:', response.data); // برای دیباگ
-      setCategories(response.data || []);
+      console.log('Categories response:', response);
+      
+      // تمام دسته‌بندی‌ها را بگیرید
+      let allCategories = [];
+      if (Array.isArray(response.data)) {
+        allCategories = response.data;
+      } else if (response.data && Array.isArray(response.data.results)) {
+        allCategories = response.data.results;
+      } else if (response.data) {
+        allCategories = response.data;
+      }
+
+      // فقط parent categories برای select dropdown
+      const parentCategories = (allCategories || []).filter(cat => !cat.parent);
+      console.log('Parent categories:', parentCategories);
+      
+      setCategories(parentCategories);
     } catch (error) {
       console.error('Error fetching categories:', error);
       setCategories([]);
