@@ -86,6 +86,13 @@ export const api = {
     getProfile: () => client.get('/auth/profile/'),
     updateProfile: (data: any) => client.put('/auth/profile/', data),
     changePassword: (data: any) => client.post('/auth/change-password/', data),
+
+    // Addresses
+    getAddresses: () => client.get('/auth/addresses/'),
+    createAddress: (data: any) => client.post('/auth/addresses/', data),
+    updateAddress: (id: number, data: any) => client.put(`/auth/addresses/${id}/`, data),
+    deleteAddress: (id: number) => client.delete(`/auth/addresses/${id}/`),
+    setDefaultAddress: (id: number) => client.post(`/auth/addresses/${id}/set_default/`),
   },
 
   // Products
