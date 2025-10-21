@@ -3,11 +3,57 @@ import { useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 import Layout from '@/components/Layout/Layout';
 import '@/styles/globals.css';
-import { Vazirmatn } from 'next/font/google';
+import localFont from 'next/font/local';
 
-const vazir = Vazirmatn({
-  subsets: ['arabic'],
-  weight: ['400', '700'],
+const estedad = localFont({
+  src: [
+    {
+      path: '../../public/fonts/Estedad-Thin.woff2',
+      weight: '100',
+      style: 'normal',
+    },
+    {
+      path: '../../public/fonts/Estedad-ExtraLight.woff2',
+      weight: '200',
+      style: 'normal',
+    },
+    {
+      path: '../../public/fonts/Estedad-Light.woff2',
+      weight: '300',
+      style: 'normal',
+    },
+    {
+      path: '../../public/fonts/Estedad-Regular.woff2',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: '../../public/fonts/Estedad-Medium.woff2',
+      weight: '500',
+      style: 'normal',
+    },
+    {
+      path: '../../public/fonts/Estedad-SemiBold.woff2',
+      weight: '600',
+      style: 'normal',
+    },
+    {
+      path: '../../public/fonts/Estedad-Bold.woff2',
+      weight: '700',
+      style: 'normal',
+    },
+    {
+      path: '../../public/fonts/Estedad-ExtraBold.woff2',
+      weight: '800',
+      style: 'normal',
+    },
+    {
+      path: '../../public/fonts/Estedad-Black.woff2',
+      weight: '900',
+      style: 'normal',
+    },
+  ],
+  variable: '--font-estedad',
   display: 'swap',
 });
 
@@ -23,7 +69,7 @@ export default function App({ Component, pageProps }: AppProps) {
   }
 
   return (
-    <div className={`${vazir.variable} font-sans`} suppressHydrationWarning>
+    <div className={`${estedad.variable} font-sans`} suppressHydrationWarning>
       <Layout>
         <Component {...pageProps} />
       </Layout>
@@ -33,7 +79,7 @@ export default function App({ Component, pageProps }: AppProps) {
           duration: 3000,
           style: {
             direction: 'rtl',
-            fontFamily: 'var(--font-vazir)',
+            fontFamily: 'var(--font-estedad)',
           },
         }}
       />
