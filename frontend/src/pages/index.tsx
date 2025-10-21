@@ -20,7 +20,7 @@ export default function Home() {
       const [featured, onSale, cats] = await Promise.all([
         api.products.getFeatured(),
         api.products.getOnSale(),
-        api.categories.getAll(),
+        api.products.getCategories(),
       ]);
 
       setFeaturedProducts(featured.data.slice(0, 8));
