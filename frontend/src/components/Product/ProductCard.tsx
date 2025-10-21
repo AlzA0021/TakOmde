@@ -58,10 +58,10 @@ export default function ProductCard({ product }: ProductCardProps) {
 
     try {
       if (isInWishlist) {
-        await api.wishlist.removeProduct({ product_id: product.id });
+        await api.wishlist.remove(product.id);
         toast.success('محصول از علاقه‌مندی‌ها حذف شد');
       } else {
-        await api.wishlist.addProduct({ product_id: product.id });
+        await api.wishlist.add(product.id);
         toast.success('محصول به علاقه‌مندی‌ها اضافه شد');
       }
 
@@ -80,7 +80,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     >
       <div className="relative aspect-square overflow-hidden">
         <Image
-          src={getImageUrl(product.image)}
+          src={getImageUrl(product.primary_image)}
           alt={product.name}
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-300"
@@ -89,12 +89,12 @@ export default function ProductCard({ product }: ProductCardProps) {
 
         {/* Badges */}
         <div className="absolute top-2 right-2 flex flex-col gap-2">
-          {product.on_sale && (
+          {product.is_on_sale && (
             <span className="bg-accent text-white text-xs px-2 py-1 rounded-full">
               فروش ویژه
             </span>
           )}
-          {product.featured && (
+          {product.is_featured && (
             <span className="bg-primary text-white text-xs px-2 py-1 rounded-full">
               ویژه
             </span>
@@ -122,13 +122,13 @@ export default function ProductCard({ product }: ProductCardProps) {
           {product.name}
         </h3>
 
-        {product.category && (
-          <p className="text-sm text-gray-500 mb-2">{product.category.name}</p>
+        {product.category_name && (
+          <p className="text-sm text-gray-500 mb-2">{product.category_name}</p>
         )}
 
         <div className="flex items-center justify-between">
           <div>
-            {product.on_sale && product.sale_price ? (
+            {product.is_on_sale && product.sale_price ? (
               <div className="flex items-center gap-2">
                 <span className="text-lg font-bold text-accent">
                   {formatPrice(product.sale_price)}
