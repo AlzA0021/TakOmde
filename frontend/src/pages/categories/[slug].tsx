@@ -4,7 +4,8 @@ import Link from 'next/link';
 import { api } from '@/lib/api-client';
 import { Product, Category } from '@/types';
 import ProductCard from '@/components/Product/ProductCard';
-import { FiChevronLeft, FiGrid, FiList } from 'react-icons/fi';
+import Breadcrumb from '@/components/Breadcrumb';
+import { FiChevronLeft, FiGrid, FiList, FiFilter } from 'react-icons/fi';
 
 export default function CategoryDetailPage() {
   const router = useRouter();
@@ -16,12 +17,18 @@ export default function CategoryDetailPage() {
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [ordering, setOrdering] = useState('-created_at');
+  const [filters, setFilters] = useState({
+    min_price: '',
+    max_price: '',
+    on_sale: false,
+    in_stock: true,
+  });
 
   useEffect(() => {
     if (slug) {
       fetchCategoryData();
     }
-  }, [slug, ordering]);
+  }, [slug, ordering, filters]);
 
   const fetchCategoryData = async () => {
     try {
@@ -30,10 +37,17 @@ export default function CategoryDetailPage() {
       setCategory(categoryResponse.data);
 
       // دریافت محصولات این دسته‌بندی
-      const productsResponse = await api.products.getAll({
+      const params: any = {
         category: categoryResponse.data.id,
         ordering: ordering,
-      });
+      };
+
+      if (filters.min_price) params.min_price = filters.min_price;
+      if (filters.max_price) params.max_price = filters.max_price;
+      if (filters.on_sale) params.on_sale = 'true';
+      if (filters.in_stock) params.in_stock = 'true';
+
+      const productsResponse = await api.products.getAll(params);
       setProducts(productsResponse.data.results || productsResponse.data);
 
       // دریافت زیردسته‌ها
@@ -68,13 +82,12 @@ export default function CategoryDetailPage() {
   return (
     <div className="container py-8">
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-sm text-gray-600 mb-8">
-        <Link href="/" className="hover:text-primary">خانه</Link>
-        <span>/</span>
-        <Link href="/categories" className="hover:text-primary">دسته‌بندی‌ها</Link>
-        <span>/</span>
-        <span className="text-gray-900">{category.name}</span>
-      </nav>
+      <Breadcrumb
+        items={[
+          { label: 'دسته‌بندی‌ها', href: '/categories' },
+          { label: category.name },
+        ]}
+      />
 
       {/* Category Header */}
       <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
@@ -114,6 +127,65 @@ export default function CategoryDetailPage() {
           </div>
         </div>
       )}
+
+      {/* Filters */}
+      <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+        <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+          <FiFilter className="text-primary" />
+          فیلترها
+        </h3>
+        <div className="grid md:grid-cols-4 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              حداقل قیمت
+            </label>
+            <input
+              type="number"
+              value={filters.min_price}
+              onChange={(e) => setFilters({ ...filters, min_price: e.target.value })}
+              className="input"
+              placeholder="از"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              حداکثر قیمت
+            </label>
+            <input
+              type="number"
+              value={filters.max_price}
+              onChange={(e) => setFilters({ ...filters, max_price: e.target.value })}
+              className="input"
+              placeholder="تا"
+            />
+          </div>
+
+          <div className="flex flex-col justify-end">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={filters.on_sale}
+                onChange={(e) => setFilters({ ...filters, on_sale: e.target.checked })}
+                className="w-4 h-4 accent-primary cursor-pointer"
+              />
+              <span className="text-sm font-medium">فقط تخفیف‌دار</span>
+            </label>
+          </div>
+
+          <div className="flex flex-col justify-end">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={filters.in_stock}
+                onChange={(e) => setFilters({ ...filters, in_stock: e.target.checked })}
+                className="w-4 h-4 accent-primary cursor-pointer"
+              />
+              <span className="text-sm font-medium">فقط موجود</span>
+            </label>
+          </div>
+        </div>
+      </div>
 
       {/* Toolbar */}
       <div className="flex items-center justify-between mb-6">
