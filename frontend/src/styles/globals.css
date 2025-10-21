@@ -5,7 +5,7 @@
 @layer base {
   html {
     direction: rtl;
-    font-family: var(--font-vazir), system-ui, sans-serif;
+    font-family: var(--font-estedad), system-ui, sans-serif;
   }
 
   body {
@@ -92,22 +92,7 @@
 }
 
 
-@font-face {
-  font-family: 'Vazir';
-  src: url('/fonts/Vazir-Regular.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Vazir';
-  src: url('/fonts/Vazir-Bold.woff2') format('woff2');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
+/* Estedad font is loaded via Next.js font optimization in _app.tsx */
 body {
-  font-family: 'Vazir', Tahoma, Arial, sans-serif;
+  font-family: var(--font-estedad), Tahoma, Arial, sans-serif;
 }

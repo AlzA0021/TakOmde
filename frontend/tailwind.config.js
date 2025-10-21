@@ -36,7 +36,7 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans: ['var(--font-vazir)', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-estedad)', 'system-ui', 'sans-serif'],
       },
     },
   },
