@@ -4,6 +4,7 @@ Models for products app
 
 from django.db import models
 from django.utils.text import slugify
+from .utils import generate_unique_slug
 
 
 class Category(models.Model):
@@ -31,7 +32,7 @@ class Category(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.name, allow_unicode=True)
+            self.slug = generate_unique_slug(Category, self.name, self)
         super().save(*args, **kwargs)
 
 
@@ -99,7 +100,7 @@ class Product(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.name, allow_unicode=True)
+            self.slug = generate_unique_slug(Product, self.name, self)
         super().save(*args, **kwargs)
 
     @property
