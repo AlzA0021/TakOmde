@@ -2,6 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  output: 'standalone', // برای Docker deployment
   
   // تنظیمات i18n برای فارسی
   i18n: {
