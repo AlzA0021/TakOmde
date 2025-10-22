@@ -118,9 +118,9 @@ export default function Header() {
                 aria-label="علاقه‌مندی‌ها"
               >
                 <FiHeart className="text-2xl" />
-                {wishlist && wishlist.products.length > 0 && (
+                {wishlist && wishlist.length > 0 && (
                   <span className="absolute -top-1 -left-1 bg-accent text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                    {wishlist.products.length}
+                    {wishlist.length}
                   </span>
                 )}
               </Link>
@@ -199,7 +199,7 @@ export default function Header() {
           <Link href="/categories" className="hover:text-primary transition-colors">
             دسته‌بندی‌ها
           </Link>
-          <Link href="/offers" className="hover:text-primary transition-colors">
+          <Link href="/special-offers" className="hover:text-primary transition-colors">
             پیشنهادات ویژه
           </Link>
           <Link href="/about" className="hover:text-primary transition-colors">
