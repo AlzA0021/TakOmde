@@ -97,7 +97,10 @@ export default function ProductDetailPage() {
     return null;
   }
 
-  const images = product.images || [product.primary_image];
+  // Extract image URLs from ProductImage objects or use primary_image
+  const images = product.images && product.images.length > 0
+    ? product.images.map(img => typeof img === 'string' ? img : img.image)
+    : [product.primary_image].filter(Boolean);
 
   return (
     <div className="container py-8">

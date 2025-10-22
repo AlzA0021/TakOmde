@@ -45,8 +45,25 @@ export function validatePostalCode(postalCode: string): boolean {
 }
 
 // Get image URL
-export function getImageUrl(path?: string): string {
+export function getImageUrl(path?: string | any): string {
   if (!path) return '/images/placeholder.png';
+
+  // If path is an object (ProductImage), extract the image property
+  if (typeof path === 'object' && path !== null) {
+    if (path.image) {
+      path = path.image;
+    } else {
+      console.warn('Invalid image object:', path);
+      return '/images/placeholder.png';
+    }
+  }
+
+  // Ensure path is a string
+  if (typeof path !== 'string') {
+    console.warn('Invalid image path type:', typeof path, path);
+    return '/images/placeholder.png';
+  }
+
   if (path.startsWith('http')) return path;
   return `${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '')}${path}`;
 }
