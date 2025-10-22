@@ -63,10 +63,10 @@ export default function Footer() {
           {/* About */}
           <div>
             <h3 className="text-white text-lg font-bold mb-4">
-              درباره پیک‌بازار
+              درباره بنکداری شقایق
             </h3>
             <p className="text-sm leading-relaxed">
-              فروشگاه آنلاین پیک‌بازار با ارائه محصولات باکیفیت و خدمات عالی،
+              فروشگاه آنلاین بنکداری شقایق با ارائه محصولات باکیفیت و خدمات عالی،
               بهترین تجربه خرید آنلاین را برای شما فراهم می‌کند.
             </p>
             <div className="flex gap-4 mt-4">
@@ -163,7 +163,7 @@ export default function Footer() {
               </li>
               <li className="flex items-start gap-2">
                 <FiMail className="mt-1 text-primary flex-shrink-0" />
-                <p>info@pickbazar.com</p>
+                <p>info@Bonakdari_Shaghayegh.com</p>
               </li>
               <li className="flex items-start gap-2">
                 <FiMapPin className="mt-1 text-primary flex-shrink-0" />
@@ -223,10 +223,10 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-gray-800 pt-8 text-center text-sm">
           <p className="mb-2">
-            © {new Date().getFullYear()} فروشگاه آنلاین پیک‌بازار. تمامی حقوق محفوظ است.
+            © {new Date().getFullYear()} فروشگاه آنلاین بنکداری شقایق. تمامی حقوق محفوظ است.
           </p>
           <p className="text-xs text-gray-500">
-            طراحی و توسعه با ❤️ توسط تیم پیک‌بازار
+            طراحی و توسعه با ❤️ توسط تیم بنکداری شقایق
           </p>
         </div>
       </div>

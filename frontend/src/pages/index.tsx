@@ -53,7 +53,7 @@ export default function Home() {
               <span className="text-accent"> سریع</span>
             </h1>
             <p className="text-gray-600 text-lg mb-8">
-              بهترین محصولات را با قیمت مناسب از فروشگاه پیک‌بازار تهیه کنید
+              بهترین محصولات را با قیمت مناسب از فروشگاه بنکداری شقایق تهیه کنید
             </p>
             <Link
               href="/products"

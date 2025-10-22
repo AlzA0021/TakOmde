@@ -51,7 +51,7 @@ export default function LoginPage() {
       <div className="max-w-md w-full">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold">ورود به حساب کاربری</h1>
-          <p className="text-gray-600 mt-2">به پیک‌بازار خوش آمدید</p>
+          <p className="text-gray-600 mt-2">به بنکداری شقایق خوش آمدید</p>
         </div>
 
         <div className="bg-white rounded-lg shadow-md p-8">
