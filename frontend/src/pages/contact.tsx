@@ -206,10 +206,10 @@ export default function Contact() {
                     <div>
                       <h4 className="font-bold text-gray-900 mb-1">ایمیل</h4>
                       <p className="text-gray-600 text-sm" dir="ltr">
-                        info@pickbazar.com
+                        info@Bonakdari_Shaghayegh.com
                       </p>
                       <p className="text-gray-600 text-sm" dir="ltr">
-                        support@pickbazar.com
+                        support@Bonakdari_Shaghayegh.com
                       </p>
                     </div>
                   </div>
