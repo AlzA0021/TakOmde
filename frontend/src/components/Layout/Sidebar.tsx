@@ -15,7 +15,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     { href: '/', label: 'صفحه اصلی', icon: FiHome },
     { href: '/products', label: 'محصولات', icon: FiShoppingBag },
     { href: '/categories', label: 'دسته‌بندی‌ها', icon: FiGrid },
-    { href: '/offers', label: 'پیشنهادات ویژه', icon: FiTag },
+    { href: '/special-offers', label: 'پیشنهادات ویژه', icon: FiTag },
     { href: '/contact', label: 'تماس با ما', icon: FiPhone },
   ];
 
