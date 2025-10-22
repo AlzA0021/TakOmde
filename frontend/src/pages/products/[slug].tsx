@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { api } from '@/lib/api-client';
 import { Product } from '@/types';
-import { formatPrice, getImageUrl } from '@/lib/utils';
+import { formatPrice, getImageUrl, getErrorMessage } from '@/lib/utils';
 import { useAuthStore, useCartStore } from '@/store';
 import { toast } from 'react-hot-toast';
 import { FiShoppingCart, FiHeart, FiShare2, FiCheck, FiX, FiMinus, FiPlus } from 'react-icons/fi';
@@ -64,7 +64,8 @@ export default function ProductDetailPage() {
 
       toast.success('محصول به سبد خرید اضافه شد');
     } catch (error: any) {
-      toast.error(error.response?.data?.error || 'خطا در افزودن به سبد خرید');
+      const errorMsg = getErrorMessage(error, 'خطا در افزودن به سبد خرید');
+      toast.error(errorMsg);
     } finally {
       setAdding(false);
     }
@@ -97,7 +98,10 @@ export default function ProductDetailPage() {
     return null;
   }
 
-  const images = product.images || [product.primary_image];
+  // Extract image URLs from ProductImage objects or use primary_image
+  const images = product.images && product.images.length > 0
+    ? product.images.map(img => typeof img === 'string' ? img : img.image)
+    : [product.primary_image].filter(Boolean);
 
   return (
     <div className="container py-8">

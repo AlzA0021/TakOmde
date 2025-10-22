@@ -173,9 +173,9 @@ export default function Profile() {
                 >
                   <FiHeart />
                   علاقه‌مندی‌ها
-                  {wishlist && wishlist.products.length > 0 && (
+                  {wishlist && wishlist.length > 0 && (
                     <span className="mr-auto bg-accent text-white text-xs px-2 py-1 rounded-full">
-                      {wishlist.products.length}
+                      {wishlist.length}
                     </span>
                   )}
                 </button>

@@ -64,9 +64,10 @@ export default function Orders() {
   const loadOrders = async () => {
     try {
       const response = await api.orders.getAll();
-      setOrders(response.data);
+      setOrders(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error('Error loading orders:', error);
+      setOrders([]);
     } finally {
       setLoading(false);
     }

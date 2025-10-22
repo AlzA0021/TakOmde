@@ -128,17 +128,17 @@ export default function Footer() {
             <h3 className="text-white text-lg font-bold mb-4">خدمات مشتریان</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/orders/track" className="hover:text-primary transition-colors">
+                <Link href="/track-order" className="hover:text-primary transition-colors">
                   پیگیری سفارش
                 </Link>
               </li>
               <li>
-                <Link href="/return" className="hover:text-primary transition-colors">
+                <Link href="/return-policy" className="hover:text-primary transition-colors">
                   رویه بازگشت کالا
                 </Link>
               </li>
               <li>
-                <Link href="/payment-guide" className="hover:text-primary transition-colors">
+                <Link href="/shopping-guide" className="hover:text-primary transition-colors">
                   راهنمای خرید
                 </Link>
               </li>

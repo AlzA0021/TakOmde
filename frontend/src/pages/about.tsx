@@ -69,7 +69,7 @@ export default function About() {
       {/* Hero Section */}
       <div className="bg-gradient-to-l from-primary to-primary-600 text-white py-20">
         <div className="container text-center">
-          <h1 className="text-5xl font-bold mb-6">درباره پیک‌بازار</h1>
+          <h1 className="text-5xl font-bold mb-6">درباره بنکداری شقایق</h1>
           <p className="text-xl text-primary-50 max-w-3xl mx-auto">
             ما با افتخار بیش از 5 سال است که در خدمت شما هستیم و با ارائه محصولات
             باکیفیت و خدمات عالی، بهترین تجربه خرید آنلاین را برای شما فراهم می‌کنیم.
@@ -103,7 +103,7 @@ export default function About() {
 
             <div className="space-y-6 text-gray-700 leading-relaxed">
               <p>
-                فروشگاه آنلاین پیک‌بازار در سال 1398 با هدف ارائه خدمات فروش آنلاین
+                فروشگاه آنلاین بنکداری شقایق در سال 1398 با هدف ارائه خدمات فروش آنلاین
                 محصولات با کیفیت و متنوع به مشتریان عزیز آغاز به کار کرد. از همان ابتدا،
                 هدف ما فراهم کردن بستری مطمئن و آسان برای خرید آنلاین بوده است.
               </p>
@@ -116,7 +116,7 @@ export default function About() {
               </p>
 
               <p>
-                امروزه پیک‌بازار یکی از پیشروترین فروشگاه‌های آنلاین در کشور است که با
+                امروزه بنکداری شقایق یکی از پیشروترین فروشگاه‌های آنلاین در کشور است که با
                 داشتن بیش از 5000 محصول در دسته‌بندی‌های مختلف، همچنان در حال رشد و
                 توسعه است. ما با کمک شما و با ارائه خدماتی بهتر، به مسیر خود ادامه
                 می‌دهیم.
@@ -155,7 +155,7 @@ export default function About() {
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">تیم ما</h2>
             <p className="text-gray-600 text-lg">
-              افرادی که با تلاش و انگیزه، پیک‌بازار را می‌سازند
+              افرادی که با تلاش و انگیزه، بنکداری شقایق را می‌سازند
             </p>
           </div>
 

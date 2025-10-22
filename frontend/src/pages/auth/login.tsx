@@ -6,6 +6,7 @@ import { api } from '@/lib/api-client';
 import { useAuthStore } from '@/store';
 import { toast } from 'react-hot-toast';
 import Cookies from 'js-cookie';
+import { getErrorMessage } from '@/lib/utils';
 
 interface LoginForm {
   username: string;
@@ -40,7 +41,8 @@ export default function LoginPage() {
       toast.success('خوش آمدید!');
       router.push('/');
     } catch (error: any) {
-      toast.error(error.response?.data?.detail || 'نام کاربری یا رمز عبور اشتباه است');
+      const errorMsg = getErrorMessage(error, 'نام کاربری یا رمز عبور اشتباه است');
+      toast.error(errorMsg);
     } finally {
       setLoading(false);
     }
