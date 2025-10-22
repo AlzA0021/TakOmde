@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { FiShoppingCart, FiHeart } from 'react-icons/fi';
 import { Product } from '@/types';
-import { formatPrice, getImageUrl } from '@/lib/utils';
+import { formatPrice, getImageUrl, getErrorMessage } from '@/lib/utils';
 import { api } from '@/lib/api-client';
 import { useCartStore, useWishlistStore, useAuthStore } from '@/store';
 import { toast } from 'react-hot-toast';
@@ -41,7 +41,8 @@ export default function ProductCard({ product }: ProductCardProps) {
       setCart(response.data);
       toast.success('محصول به سبد خرید اضافه شد');
     } catch (error: any) {
-      toast.error(error.response?.data?.error || 'خطا در افزودن به سبد خرید');
+      const errorMsg = getErrorMessage(error, 'خطا در افزودن به سبد خرید');
+      toast.error(errorMsg);
     } finally {
       setIsAddingToCart(false);
     }
@@ -67,8 +68,9 @@ export default function ProductCard({ product }: ProductCardProps) {
 
       const response = await api.wishlist.get();
       setWishlist(response.data);
-    } catch (error) {
-      toast.error('خطا در عملیات');
+    } catch (error: any) {
+      const errorMsg = getErrorMessage(error, 'خطا در عملیات');
+      toast.error(errorMsg);
     }
   };
 

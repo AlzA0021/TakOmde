@@ -155,3 +155,65 @@ export const storage = {
     }
   },
 };
+
+// Extract error message from API response
+export function getErrorMessage(error: any, defaultMessage = 'خطایی رخ داد'): string {
+  if (!error) return defaultMessage;
+
+  // If error.response exists (axios error)
+  if (error.response?.data) {
+    const data = error.response.data;
+
+    // Check for various error message formats
+    if (typeof data === 'string') return data;
+
+    // Check common error keys
+    if (data.error) return data.error;
+    if (data.detail) return data.detail;
+    if (data.message) return data.message;
+
+    // Check for field-specific errors (validation errors)
+    if (data.non_field_errors && Array.isArray(data.non_field_errors)) {
+      return data.non_field_errors.join(', ');
+    }
+
+    // Check for first field error
+    const firstField = Object.keys(data).find(key =>
+      Array.isArray(data[key]) && data[key].length > 0
+    );
+    if (firstField && Array.isArray(data[firstField])) {
+      const fieldErrors = data[firstField];
+      if (fieldErrors.length > 0) {
+        // Return field name + error message for better context
+        const fieldName = getFieldNameInPersian(firstField);
+        return `${fieldName}: ${fieldErrors[0]}`;
+      }
+    }
+  }
+
+  // Check error.message (general error)
+  if (error.message) return error.message;
+
+  // If nothing found, return default
+  return defaultMessage;
+}
+
+// Helper function to translate field names to Persian
+function getFieldNameInPersian(fieldName: string): string {
+  const fieldMap: Record<string, string> = {
+    username: 'نام کاربری',
+    password: 'رمز عبور',
+    email: 'ایمیل',
+    phone_number: 'شماره تلفن',
+    first_name: 'نام',
+    last_name: 'نام خانوادگی',
+    product_id: 'محصول',
+    quantity: 'تعداد',
+    address: 'آدرس',
+    postal_code: 'کد پستی',
+    city: 'شهر',
+    state: 'استان',
+  };
+
+  return fieldMap[fieldName] || fieldName;
+}
