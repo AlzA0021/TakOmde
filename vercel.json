@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "buildCommand": "cd frontend && npm install && npm run build",
+  "devCommand": "cd frontend && npm run dev",
+  "installCommand": "cd frontend && npm install",
+  "framework": "nextjs",
+  "outputDirectory": "frontend/.next",
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "https://YOUR_RENDER_BACKEND_URL/api/$1"
+    },
+    {
+      "src": "/media/(.*)",
+      "dest": "https://YOUR_RENDER_BACKEND_URL/media/$1"
+    }
+  ],
+  "env": {
+    "NEXT_PUBLIC_API_URL": "https://YOUR_RENDER_BACKEND_URL/api",
+    "NEXT_PUBLIC_SITE_NAME": "فروشگاه پیک بازار",
+    "NEXT_PUBLIC_SITE_DESCRIPTION": "فروشگاه آنلاین محصولات"
+  }
+}
