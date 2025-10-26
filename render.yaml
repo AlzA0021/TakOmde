@@ -1,0 +1,37 @@
+services:
+  # PostgreSQL Database
+  - type: pserv
+    name: pickbazar-db
+    env: docker
+    plan: free
+    dockerfilePath: ./backend/Dockerfile
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: pickbazar-postgres
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          name: pickbazar-redis
+          type: redis
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: False
+      - key: ALLOWED_HOSTS
+        value: .onrender.com
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false
+
+  # Redis
+  - type: redis
+    name: pickbazar-redis
+    plan: free
+    maxmemoryPolicy: noeviction
+
+databases:
+  - name: pickbazar-postgres
+    plan: free
+    databaseName: pickbazar_db
+    user: pickbazar_user
