@@ -174,7 +174,7 @@ python manage.py createsuperuser
 
 ```bash
 NEXT_PUBLIC_API_URL=https://pickbazar-backend.onrender.com/api
-NEXT_PUBLIC_SITE_NAME=فروشگاه پیک بازار
+=فروشگاه پیک بازار
 NEXT_PUBLIC_SITE_DESCRIPTION=فروشگاه آنلاین محصولات
 ```
 
@@ -201,7 +201,7 @@ NEXT_PUBLIC_SITE_DESCRIPTION=فروشگاه آنلاین محصولات
 4. متغیر `CORS_ALLOWED_ORIGINS` را به‌روز کنید:
    ```
    CORS_ALLOWED_ORIGINS=https://your-project-name.vercel.app
-   ```
+   ```NEXT_PUBLIC_SITE_NAME
 5. روی **"Save Changes"** کلیک کنید
 6. Backend به صورت خودکار redeploy می‌شود
 
