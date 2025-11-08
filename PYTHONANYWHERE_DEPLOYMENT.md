@@ -159,9 +159,9 @@ ALLOWED_HOSTS=yourusername.pythonanywhere.com
 
 # Database - MySQL
 DB_ENGINE=django.db.backends.mysql
-DB_NAME=yourusername$pickbazar
-DB_USER=yourusername
-DB_PASSWORD=<رمز MySQL که تنظیم کردید>
+DB_NAME=AlzA$pickbazar
+DB_USER=AlzA
+DB_PASSWORD=<0021AlzA080>
 DB_HOST=yourusername.mysql.pythonanywhere-services.com
 
 # CORS Settings
