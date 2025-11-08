@@ -109,6 +109,53 @@ export default function Profile() {
     toast.success('با موفقیت خارج شدید');
   };
 
+  // Helper function to get wishlist count
+  const getWishlistCount = () => {
+    if (!wishlist) return 0;
+    const wishlistAny = wishlist as any;
+    
+    if (Array.isArray(wishlist)) {
+      return wishlist.length;
+    }
+    
+    if (wishlistAny.products && Array.isArray(wishlistAny.products)) {
+      return wishlistAny.products.length;
+    }
+    
+    if (wishlistAny.items && Array.isArray(wishlistAny.items)) {
+      return wishlistAny.items.length;
+    }
+    
+    if (typeof wishlistAny.count === 'number') {
+      return wishlistAny.count;
+    }
+    
+    return 0;
+  };
+
+  // Helper function to get wishlist products
+  const getWishlistProducts = () => {
+    if (!wishlist) return [];
+    const wishlistAny = wishlist as any;
+    
+    if (Array.isArray(wishlist)) {
+      return wishlist;
+    }
+    
+    if (wishlistAny.products && Array.isArray(wishlistAny.products)) {
+      return wishlistAny.products;
+    }
+    
+    if (wishlistAny.items && Array.isArray(wishlistAny.items)) {
+      return wishlistAny.items;
+    }
+    
+    return [];
+  };
+
+  const wishlistCount = getWishlistCount();
+  const wishlistProducts = getWishlistProducts();
+
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -173,9 +220,9 @@ export default function Profile() {
                 >
                   <FiHeart />
                   علاقه‌مندی‌ها
-                  {wishlist && wishlist.length > 0 && (
+                  {wishlistCount > 0 && (
                     <span className="mr-auto bg-accent text-white text-xs px-2 py-1 rounded-full">
-                      {wishlist.length}
+                      {wishlistCount}
                     </span>
                   )}
                 </button>
@@ -417,9 +464,9 @@ export default function Profile() {
               <div className="bg-white rounded-lg shadow-sm p-6">
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">علاقه‌مندی‌ها</h2>
 
-                {wishlist && wishlist.products.length > 0 ? (
+                {wishlistProducts.length > 0 ? (
                   <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {wishlist.products.map((product) => (
+                    {wishlistProducts.map((product: any) => (
                       <ProductCard key={product.id} product={product} />
                     ))}
                   </div>

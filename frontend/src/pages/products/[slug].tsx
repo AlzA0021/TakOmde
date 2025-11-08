@@ -100,8 +100,11 @@ export default function ProductDetailPage() {
 
   // Extract image URLs from ProductImage objects or use primary_image
   const images = product.images && product.images.length > 0
-    ? product.images.map(img => typeof img === 'string' ? img : img.image)
+    ? product.images.map((img: any) => typeof img === 'string' ? img : img.image)
     : [product.primary_image].filter(Boolean);
+
+  // Type assertion for meta fields
+  const productAny = product as any;
 
   return (
     <div className="container py-8">
@@ -110,11 +113,11 @@ export default function ProductDetailPage() {
         <Link href="/" className="hover:text-primary">خانه</Link>
         <span>/</span>
         <Link href="/products" className="hover:text-primary">محصولات</Link>
-        {product.category_name && (
+        {productAny.category_name && (
           <>
             <span>/</span>
             <Link href={`/categories/${product.category}`} className="hover:text-primary">
-              {product.category_name}
+              {productAny.category_name}
             </Link>
           </>
         )}
@@ -136,7 +139,7 @@ export default function ProductDetailPage() {
             />
             {product.is_on_sale && (
               <div className="absolute top-4 right-4 bg-accent text-white px-3 py-1 rounded-full font-medium">
-                {product.discount_percentage}% تخفیف
+                {productAny.discount_percentage}% تخفیف
               </div>
             )}
           </div>
@@ -144,7 +147,7 @@ export default function ProductDetailPage() {
           {/* Thumbnail Images */}
           {images.length > 1 && (
             <div className="grid grid-cols-5 gap-2">
-              {images.map((image, index) => (
+              {images.map((image: string, index: number) => (
                 <button
                   key={index}
                   onClick={() => setSelectedImage(index)}
@@ -179,7 +182,7 @@ export default function ProductDetailPage() {
               <>
                 <div className="flex items-center gap-3 mb-2">
                   <span className="text-3xl font-bold text-primary">
-                    {formatPrice(product.sale_price || product.final_price)}
+                    {formatPrice(productAny.sale_price || product.final_price)}
                   </span>
                   <span className="text-xl text-gray-400 line-through">
                     {formatPrice(product.price)}
@@ -242,7 +245,7 @@ export default function ProductDetailPage() {
                   className="w-20 text-center border rounded-lg px-3 py-2"
                 />
                 <button
-                  onClick={() => setQuantity(Math.min(product.stock_quantity, quantity + 1))}
+                  onClick={() => setQuantity(Math.min(product.stock_quantity || 999, quantity + 1))}
                   className="w-10 h-10 flex items-center justify-center border rounded-lg hover:bg-gray-100"
                 >
                   <FiPlus />
@@ -279,14 +282,14 @@ export default function ProductDetailPage() {
 
           {/* Additional Info */}
           <div className="border-t pt-6 space-y-3 text-sm">
-            {product.category_name && (
+            {productAny.category_name && (
               <div className="flex justify-between">
                 <span className="text-gray-600">دسته‌بندی:</span>
                 <Link
                   href={`/categories/${product.category}`}
                   className="text-primary hover:underline"
                 >
-                  {product.category_name}
+                  {productAny.category_name}
                 </Link>
               </div>
             )}
@@ -301,20 +304,20 @@ export default function ProductDetailPage() {
       </div>
 
       {/* Additional Details */}
-      {(product.meta_description || product.meta_keywords) && (
+      {(productAny.meta_description || productAny.meta_keywords) && (
         <div className="bg-white rounded-lg shadow-sm p-6">
           <h2 className="text-2xl font-bold mb-4">اطلاعات تکمیلی</h2>
-          {product.meta_description && (
+          {productAny.meta_description && (
             <div className="mb-4">
               <h3 className="font-bold mb-2">توضیحات کامل</h3>
-              <p className="text-gray-600 leading-relaxed">{product.meta_description}</p>
+              <p className="text-gray-600 leading-relaxed">{productAny.meta_description}</p>
             </div>
           )}
-          {product.meta_keywords && (
+          {productAny.meta_keywords && (
             <div>
               <h3 className="font-bold mb-2">کلمات کلیدی</h3>
               <div className="flex flex-wrap gap-2">
-                {product.meta_keywords.split(',').map((keyword, index) => (
+                {productAny.meta_keywords.split(',').map((keyword: string, index: number) => (
                   <span
                     key={index}
                     className="bg-gray-100 px-3 py-1 rounded-full text-sm"

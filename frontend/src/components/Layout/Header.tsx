@@ -37,6 +37,38 @@ export default function Header() {
     }
   };
 
+  // تعداد آیتم‌های wishlist را محاسبه می‌کنیم
+  const getWishlistCount = () => {
+    if (!wishlist) return 0;
+    
+    // Type assertion برای دسترسی به پراپرتی‌های مختلف
+    const wishlistAny = wishlist as any;
+    
+    // اگر wishlist یک آرایه است
+    if (Array.isArray(wishlist)) {
+      return wishlist.length;
+    }
+    
+    // اگر wishlist یک آبجکت با پراپرتی items است
+    if (wishlistAny.items && Array.isArray(wishlistAny.items)) {
+      return wishlistAny.items.length;
+    }
+    
+    // اگر wishlist یک آبجکت با پراپرتی products است
+    if (wishlistAny.products && Array.isArray(wishlistAny.products)) {
+      return wishlistAny.products.length;
+    }
+    
+    // اگر wishlist یک آبجکت با پراپرتی count است
+    if (typeof wishlistAny.count === 'number') {
+      return wishlistAny.count;
+    }
+    
+    return 0;
+  };
+
+  const wishlistCount = getWishlistCount();
+
   // پیشگیری از نمایش محتوای نادرست در سرور
   if (!mounted) {
     return (
@@ -118,9 +150,9 @@ export default function Header() {
                 aria-label="علاقه‌مندی‌ها"
               >
                 <FiHeart className="text-2xl" />
-                {wishlist && wishlist.length > 0 && (
+                {wishlistCount > 0 && (
                   <span className="absolute -top-1 -left-1 bg-accent text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                    {wishlist.length}
+                    {wishlistCount}
                   </span>
                 )}
               </Link>

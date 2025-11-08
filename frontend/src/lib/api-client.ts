@@ -62,11 +62,12 @@ client.interceptors.response.use(
     }
 
     // Handle other errors
-    if (error.response?.status === 403) {
+    const status = error.response?.status;
+    if (status === 403) {
       toast.error('شما دسترسی به این بخش ندارید');
-    } else if (error.response?.status === 404) {
+    } else if (status === 404) {
       toast.error('مورد درخواستی یافت نشد');
-    } else if (error.response?.status >= 500) {
+    } else if (status && status >= 500) {
       toast.error('خطای سرور. لطفاً بعداً تلاش کنید');
     }
 

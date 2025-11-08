@@ -13,8 +13,8 @@ import Breadcrumb from '@/components/Breadcrumb';
 export default function Wishlist() {
   const router = useRouter();
   const { isAuthenticated } = useAuthStore();
-  const { addToCart } = useCartStore();
-  const { wishlist, removeFromWishlist, loadWishlist } = useWishlistStore();
+  const { cart, setCart } = useCartStore();
+  const { wishlist } = useWishlistStore();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -24,29 +24,31 @@ export default function Wishlist() {
       return;
     }
     loadWishlistProducts();
-  }, [isAuthenticated, wishlist]);
+  }, [isAuthenticated]);
 
   const loadWishlistProducts = async () => {
     try {
       setLoading(true);
-      if (wishlist.length === 0) {
-        setProducts([]);
-        setLoading(false);
-        return;
+      const response = await api.wishlist.get();
+      
+      // Extract products from wishlist response
+      let wishlistProducts: Product[] = [];
+      if (response.data) {
+        const wishlistAny = response.data as any;
+        if (Array.isArray(response.data)) {
+          wishlistProducts = response.data;
+        } else if (wishlistAny.products && Array.isArray(wishlistAny.products)) {
+          wishlistProducts = wishlistAny.products;
+        } else if (wishlistAny.items && Array.isArray(wishlistAny.items)) {
+          wishlistProducts = wishlistAny.items;
+        }
       }
-
-      // Load all wishlist products
-      const productPromises = wishlist.map((id) => api.products.getById(id));
-      const responses = await Promise.allSettled(productPromises);
-
-      const loadedProducts = responses
-        .filter((result): result is PromiseFulfilledResult<any> => result.status === 'fulfilled')
-        .map((result) => result.value.data);
-
-      setProducts(loadedProducts);
+      
+      setProducts(wishlistProducts);
     } catch (error) {
       console.error('Error loading wishlist products:', error);
       toast.error('خطا در بارگذاری لیست علاقه‌مندی‌ها');
+      setProducts([]);
     } finally {
       setLoading(false);
     }
@@ -55,7 +57,8 @@ export default function Wishlist() {
   const handleRemoveFromWishlist = async (productId: number) => {
     try {
       await api.wishlist.remove(productId);
-      removeFromWishlist(productId);
+      // Reload wishlist after removal
+      await loadWishlistProducts();
       toast.success('از لیست علاقه‌مندی‌ها حذف شد');
     } catch (error) {
       console.error('Error removing from wishlist:', error);
@@ -63,27 +66,62 @@ export default function Wishlist() {
     }
   };
 
-  const handleAddToCart = (product: Product) => {
-    if (product.stock_quantity > 0) {
-      addToCart(product);
-      toast.success('محصول به سبد خرید اضافه شد');
-    } else {
+  const handleAddToCart = async (product: Product) => {
+    if (!product.is_in_stock || (product.stock_quantity && product.stock_quantity <= 0)) {
       toast.error('محصول موجود نیست');
+      return;
+    }
+
+    try {
+      await api.cart.addItem({
+        product_id: product.id,
+        quantity: 1,
+      });
+
+      // Reload cart
+      const cartResponse = await api.cart.get();
+      setCart(cartResponse.data);
+      
+      toast.success('محصول به سبد خرید اضافه شد');
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      toast.error('خطا در افزودن به سبد خرید');
     }
   };
 
-  const handleAddAllToCart = () => {
+  const handleAddAllToCart = async () => {
     let addedCount = 0;
-    products.forEach((product) => {
-      if (product.stock_quantity > 0) {
-        addToCart(product);
-        addedCount++;
+    let failedCount = 0;
+
+    for (const product of products) {
+      if (product.is_in_stock && (!product.stock_quantity || product.stock_quantity > 0)) {
+        try {
+          await api.cart.addItem({
+            product_id: product.id,
+            quantity: 1,
+          });
+          addedCount++;
+        } catch (error) {
+          failedCount++;
+        }
       }
-    });
+    }
+
+    // Reload cart after adding all
+    try {
+      const cartResponse = await api.cart.get();
+      setCart(cartResponse.data);
+    } catch (error) {
+      console.error('Error reloading cart:', error);
+    }
 
     if (addedCount > 0) {
       toast.success(`${addedCount} محصول به سبد خرید اضافه شد`);
-    } else {
+    }
+    if (failedCount > 0) {
+      toast.error(`${failedCount} محصول قابل افزودن نبود`);
+    }
+    if (addedCount === 0 && failedCount === 0) {
       toast.error('هیچ محصول موجودی برای افزودن به سبد وجود ندارد');
     }
   };
@@ -162,100 +200,103 @@ export default function Wishlist() {
 
             {/* Products Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {products.map((product) => (
-                <div
-                  key={product.id}
-                  className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow"
-                >
-                  {/* Product Image */}
-                  <Link href={`/products/${product.slug}`} className="block relative">
-                    <div className="relative w-full h-64 bg-gray-100">
-                      {product.primary_image ? (
-                        <Image
-                          src={product.primary_image}
-                          alt={product.name}
-                          fill
-                          className="object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                          <FiPackage className="w-16 h-16 text-gray-300" />
-                        </div>
-                      )}
-                    </div>
+              {products.map((product) => {
+                const productAny = product as any;
+                return (
+                  <div
+                    key={product.id}
+                    className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow"
+                  >
+                    {/* Product Image */}
+                    <Link href={`/products/${product.slug}`} className="block relative">
+                      <div className="relative w-full h-64 bg-gray-100">
+                        {product.primary_image ? (
+                          <Image
+                            src={product.primary_image}
+                            alt={product.name}
+                            fill
+                            className="object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center">
+                            <FiPackage className="w-16 h-16 text-gray-300" />
+                          </div>
+                        )}
+                      </div>
 
-                    {/* Badges */}
-                    <div className="absolute top-3 right-3 flex flex-col gap-2">
-                      {product.is_on_sale && (
-                        <span className="px-3 py-1 bg-red-500 text-white text-xs font-bold rounded-full">
-                          تخفیف
-                        </span>
-                      )}
-                      {product.stock_quantity === 0 && (
-                        <span className="px-3 py-1 bg-gray-500 text-white text-xs font-bold rounded-full">
-                          ناموجود
-                        </span>
-                      )}
-                    </div>
-                  </Link>
-
-                  {/* Product Info */}
-                  <div className="p-4">
-                    <Link href={`/products/${product.slug}`}>
-                      <h3 className="font-bold text-gray-900 mb-2 hover:text-primary transition-colors line-clamp-2">
-                        {product.name}
-                      </h3>
+                      {/* Badges */}
+                      <div className="absolute top-3 right-3 flex flex-col gap-2">
+                        {product.is_on_sale && (
+                          <span className="px-3 py-1 bg-red-500 text-white text-xs font-bold rounded-full">
+                            تخفیف
+                          </span>
+                        )}
+                        {!product.is_in_stock || (product.stock_quantity !== undefined && product.stock_quantity === 0) && (
+                          <span className="px-3 py-1 bg-gray-500 text-white text-xs font-bold rounded-full">
+                            ناموجود
+                          </span>
+                        )}
+                      </div>
                     </Link>
 
-                    <p className="text-sm text-gray-600 mb-3">{product.category_name}</p>
+                    {/* Product Info */}
+                    <div className="p-4">
+                      <Link href={`/products/${product.slug}`}>
+                        <h3 className="font-bold text-gray-900 mb-2 hover:text-primary transition-colors line-clamp-2">
+                          {product.name}
+                        </h3>
+                      </Link>
 
-                    {/* Price */}
-                    <div className="mb-4">
-                      {product.is_on_sale && product.sale_price ? (
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-xl font-bold text-primary">
-                              {formatPrice(product.sale_price)}
-                            </span>
-                            <span className="text-sm text-gray-400 line-through">
-                              {formatPrice(product.price)}
-                            </span>
+                      <p className="text-sm text-gray-600 mb-3">{productAny.category_name || ''}</p>
+
+                      {/* Price */}
+                      <div className="mb-4">
+                        {product.is_on_sale && productAny.sale_price ? (
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-xl font-bold text-primary">
+                                {formatPrice(productAny.sale_price)}
+                              </span>
+                              <span className="text-sm text-gray-400 line-through">
+                                {formatPrice(product.price)}
+                              </span>
+                            </div>
+                            {product.price && productAny.sale_price && (
+                              <span className="text-xs text-red-600 font-medium">
+                                {Math.round(((Number(product.price) - Number(productAny.sale_price)) / Number(product.price)) * 100)}% تخفیف
+                              </span>
+                            )}
                           </div>
-                          {product.price && product.sale_price && (
-                            <span className="text-xs text-red-600 font-medium">
-                              {Math.round(((product.price - product.sale_price) / product.price) * 100)}% تخفیف
-                            </span>
-                          )}
-                        </div>
-                      ) : (
-                        <span className="text-xl font-bold text-gray-900">
-                          {formatPrice(product.price)}
-                        </span>
-                      )}
-                    </div>
+                        ) : (
+                          <span className="text-xl font-bold text-gray-900">
+                            {formatPrice(product.price)}
+                          </span>
+                        )}
+                      </div>
 
-                    {/* Action Buttons */}
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => handleAddToCart(product)}
-                        disabled={product.stock_quantity === 0}
-                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
-                      >
-                        <FiShoppingCart size={16} />
-                        <span className="text-sm">افزودن به سبد</span>
-                      </button>
+                      {/* Action Buttons */}
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleAddToCart(product)}
+                          disabled={!product.is_in_stock || (product.stock_quantity !== undefined && product.stock_quantity === 0)}
+                          className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+                        >
+                          <FiShoppingCart size={16} />
+                          <span className="text-sm">افزودن به سبد</span>
+                        </button>
 
-                      <button
-                        onClick={() => handleRemoveFromWishlist(product.id)}
-                        className="p-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors"
-                        title="حذف از لیست"
-                      >
-                        <FiTrash2 size={18} />
-                      </button>
+                        <button
+                          onClick={() => handleRemoveFromWishlist(product.id)}
+                          className="p-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors"
+                          title="حذف از لیست"
+                        >
+                          <FiTrash2 size={18} />
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </>
         )}

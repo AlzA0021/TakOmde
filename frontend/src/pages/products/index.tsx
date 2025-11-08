@@ -45,7 +45,7 @@ export default function ProductsPage() {
       console.log('Categories response:', response);
       
       // تمام دسته‌بندی‌ها را بگیرید
-      let allCategories = [];
+      let allCategories: Category[] = [];
       if (Array.isArray(response.data)) {
         allCategories = response.data;
       } else if (response.data && Array.isArray(response.data.results)) {
@@ -55,7 +55,7 @@ export default function ProductsPage() {
       }
 
       // فقط parent categories برای select dropdown
-      const parentCategories = (allCategories || []).filter(cat => !cat.parent);
+      const parentCategories = (allCategories || []).filter((cat: Category) => !cat.parent);
       console.log('Parent categories:', parentCategories);
       
       setCategories(parentCategories);

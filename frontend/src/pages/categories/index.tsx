@@ -17,7 +17,7 @@ export default function CategoriesPage() {
       const response = await api.products.getCategories();
       
       // مطمئن شوید response.data آرایه است
-      let allCategories = [];
+      let allCategories: Category[] = [];
       if (Array.isArray(response.data)) {
         allCategories = response.data;
       } else if (response.data && Array.isArray(response.data.results)) {
@@ -39,17 +39,17 @@ export default function CategoriesPage() {
   const parentCategories = (categories || []).filter(cat => !cat.parent) || [];
 
   // بهبود: ایجاد map برای دسترسی سریع
-  const childCategoriesByParent = new Map();
+  const childCategoriesByParent = new Map<number, Category[]>();
   (categories || []).forEach(cat => {
     if (cat.parent) {
       if (!childCategoriesByParent.has(cat.parent)) {
         childCategoriesByParent.set(cat.parent, []);
       }
-      childCategoriesByParent.get(cat.parent).push(cat);
+      childCategoriesByParent.get(cat.parent)?.push(cat);
     }
   });
 
-  const getChildrenForParent = (parentId) => {
+  const getChildrenForParent = (parentId: number): Category[] => {
     return childCategoriesByParent.get(parentId) || [];
   };
 
@@ -112,9 +112,9 @@ export default function CategoriesPage() {
                           <p className="font-medium text-sm group-hover:text-primary transition-colors truncate">
                             {child.name}
                           </p>
-                          {child.product_count !== undefined && (
+                          {(child as any).product_count !== undefined && (
                             <p className="text-xs text-gray-500">
-                              {child.product_count} محصول
+                              {(child as any).product_count} محصول
                             </p>
                           )}
                         </div>
@@ -140,8 +140,8 @@ export default function CategoriesPage() {
                     <span className="text-2xl">{category.name[0]}</span>
                   </div>
                   <h3 className="font-bold mb-1">{category.name}</h3>
-                  {category.product_count !== undefined && (
-                    <p className="text-sm text-gray-500">{category.product_count} محصول</p>
+                  {(category as any).product_count !== undefined && (
+                    <p className="text-sm text-gray-500">{(category as any).product_count} محصول</p>
                   )}
                 </Link>
               ))}
