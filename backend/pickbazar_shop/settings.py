@@ -77,33 +77,14 @@ WSGI_APPLICATION = 'pickbazar_shop.wsgi.application'
 # Database
 import dj_database_url
 
-# انتخاب Database بر اساس محیط
-DB_ENGINE = config('DB_ENGINE', default='django.db.backends.postgresql')
-
-if DB_ENGINE == 'django.db.backends.mysql':
-    # تنظیمات MySQL برای PythonAnywhere
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': config('DB_NAME', default='YOUR_USERNAME$pickbazar'),
-            'USER': config('DB_USER', default='YOUR_USERNAME'),
-            'PASSWORD': config('DB_PASSWORD', default=''),
-            'HOST': config('DB_HOST', default='YOUR_USERNAME.mysql.pythonanywhere-services.com'),
-            'OPTIONS': {
-                'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-                'charset': 'utf8mb4',
-            },
-        }
-    }
-else:
-    # استفاده از DATABASE_URL برای Render.com و سایر سرویس‌های cloud
-    DATABASES = {
-        "default": dj_database_url.config(
-            default=f"postgresql://{config('DB_USER', default='postgres')}:{config('DB_PASSWORD', default='')}@{config('DB_HOST', default='localhost')}:{config('DB_PORT', default='5432')}/{config('DB_NAME', default='pickbazar_db')}",
-            conn_max_age=600,
-            conn_health_checks=True,
-        )
-    }
+# استفاده از DATABASE_URL برای Render.com و سایر سرویس‌های cloud
+DATABASES = {
+    "default": dj_database_url.config(
+        default=f"postgresql://{config('DB_USER', default='postgres')}:{config('DB_PASSWORD', default='')}@{config('DB_HOST', default='localhost')}:{config('DB_PORT', default='5432')}/{config('DB_NAME', default='pickbazar_db')}",
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
+}
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
